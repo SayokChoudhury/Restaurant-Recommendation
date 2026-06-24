@@ -16,13 +16,10 @@ The backend is built with FastAPI and utilizes a local SQLite database. Since Ra
 4. **Environment Variables:**
    - Go to the **Variables** tab.
    - Add your `GROQ_API_KEY`.
-5. **Persistent Storage (Crucial for SQLite):**
-   - In the service settings, go to the **Volumes** section.
-   - Add a new Volume and mount it to `/app/data` (since the database is generated in the `data/` directory relative to the project root).
-   - *Alternative:* You could also migrate the database to PostgreSQL on Railway, but mounting a volume for SQLite is the quickest solution without changing the codebase.
-6. **Populating the Database:**
-   - After the service is deployed, you will need to run the data ingestion script once to populate the persistent volume.
-   - You can do this by temporarily setting the start command to `python data_ingestion.py && uvicorn main:app --host 0.0.0.0 --port $PORT` or by using the Railway CLI to execute the script manually.
+5. **No Persistent Storage Needed:**
+   - The backend is now configured to automatically use a temporary directory if no persistent volume is found.
+6. **Automatic Database Population:**
+   - The application has been updated to automatically detect an empty database on startup and run the data ingestion script instantly. You do **not** need to manually run any scripts or populate volumes!
 7. **Generate a Domain:**
    - Go to the **Settings** tab -> **Networking** and click "Generate Domain". 
    - *Save this URL (e.g., `https://lumina-backend.up.railway.app`). You'll need it for the frontend.*

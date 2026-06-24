@@ -80,14 +80,9 @@ export default function RecommendationForm({
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch recommendations", error);
-      // Temporary fallback for UI testing without backend
-      setTimeout(() => {
-        onResults([{
-          id: 1, name: "The Pizza Bakery (Mock Data)", rating: 4.4, cost: 1500, location: "Bellandur", cuisine: "Italian", explanation: "Perfectly hits your 1500 budget while offering an exceptional 4.4-rated authentic Italian pizza experience."
-        }]);
-        setIsFetching(false);
-        setLoading(false);
-      }, 2000);
+      alert(`API Connection Failed!\nAttempted to connect to: ${apiUrl}/api/recommend\n\nIf the URL above says 127.0.0.1, it means you need to add NEXT_PUBLIC_API_URL to your Vercel Environment Variables and redeploy.\n\nIf the URL is correct, your Railway backend is likely crashing or taking too long to respond.`);
+      setIsFetching(false);
+      setLoading(false);
     }
   };
 

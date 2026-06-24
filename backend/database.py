@@ -11,7 +11,12 @@ if parent_dir == "/" or parent_dir == "\\":
 else:
     DB_DIR = os.path.join(parent_dir, "data")
     
-os.makedirs(DB_DIR, exist_ok=True)
+try:
+    os.makedirs(DB_DIR, exist_ok=True)
+except PermissionError:
+    # Fallback to /tmp if we don't have permission (e.g. Railway without volume)
+    DB_DIR = "/tmp/data"
+    os.makedirs(DB_DIR, exist_ok=True)
 
 DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'restaurants.db')}"
 

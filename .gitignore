@@ -45,9 +45,10 @@ yarn-error.log*
 .env.production.local
 
 # Databases
+*.db
 *.sqlite3
+data/restaurants.db
 *.parquet
-# Note: data/restaurants.db is intentionally tracked (pre-built seed database)
 
 # OS Files
 .DS_Store

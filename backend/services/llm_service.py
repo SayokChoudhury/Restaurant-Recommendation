@@ -22,7 +22,9 @@ The user has the following specific preferences and mood: "{user_preferences or 
 Here is a JSON list of high-quality restaurants that match their basic constraints:
 {json.dumps(restaurants_data, indent=2)}
 
-Please select the top 3-5 restaurants from this list that most perfectly align with the user's specific mood and preferences.
+Please select the top 5 restaurants from this list that most perfectly align with the user's specific mood and preferences.
+CRITICAL: You MUST return exactly 5 recommendations in the array (unless the list has fewer than 5).
+
 You MUST reply in pure JSON format as an object containing a "recommendations" array.
 Each object in the array must have exactly two keys:
 - "id": the integer ID of the restaurant from the list provided.
@@ -31,7 +33,11 @@ Each object in the array must have exactly two keys:
 Output format:
 {{
   "recommendations": [
-    {{"id": 10, "explanation": "With its exquisite ambiance and premium wine selection, this spot perfectly captures the romantic anniversary vibe you're looking for."}}
+    {{"id": 10, "explanation": "With its exquisite ambiance and premium wine selection, this spot perfectly captures the romantic anniversary vibe you're looking for."}},
+    {{"id": 42, "explanation": "A hidden gem known for its breathtaking city views and unforgettable dessert tasting menu."}},
+    {{"id": 15, "explanation": "This lively bistro will bring exactly the energetic atmosphere you wanted, alongside their famous house cocktails."}},
+    {{"id": 8, "explanation": "An award-winning chef creates culinary magic here, making it the perfect destination for your adventurous palate."}},
+    {{"id": 23, "explanation": "Cozy, intimate, and featuring a farm-to-table menu that aligns perfectly with your preference for fresh, organic ingredients."}}
   ]
 }}
 """

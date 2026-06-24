@@ -62,8 +62,8 @@ def run_ingestion():
     try:
         # Load the dataset with streaming to avoid Out Of Memory errors on small instances
         dataset = load_dataset('ManikaSaini/zomato-restaurant-recommendation', split='train', streaming=True)
-        # Take a subset of 20000 rows for the demo to save memory and time
-        df = pd.DataFrame(list(dataset.take(20000)))
+        # Take a subset of 10000 rows for the demo to save memory and time
+        df = pd.DataFrame(list(dataset.take(10000)))
     except Exception as e:
         print(f"Error loading dataset: {e}")
         return

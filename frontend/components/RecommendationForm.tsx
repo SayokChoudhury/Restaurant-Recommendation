@@ -80,6 +80,7 @@ export default function RecommendationForm({
       setLoading(false);
     } catch (error) {
       console.error("Failed to fetch recommendations", error);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
       alert(`API Connection Failed!\nAttempted to connect to: ${apiUrl}/api/recommend\n\nIf the URL above says 127.0.0.1, it means you need to add NEXT_PUBLIC_API_URL to your Vercel Environment Variables and redeploy.\n\nIf the URL is correct, your Railway backend is likely crashing or taking too long to respond.`);
       setIsFetching(false);
       setLoading(false);

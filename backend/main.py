@@ -38,3 +38,23 @@ app.include_router(recommendations.router, prefix="/api", tags=["Recommendations
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Restaurant Recommendation API"}
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint for Railway and monitoring."""
+    db = SessionLocal()
+    try:
+        count = db.query(Restaurant).count()
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "restaurant_count": count
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "database": "error",
+            "error": str(e)
+        }
+    finally:
+        db.close()

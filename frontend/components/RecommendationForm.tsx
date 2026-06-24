@@ -61,7 +61,8 @@ export default function RecommendationForm({
     
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
-      const response = await fetch(`${apiUrl}/api/recommend`, {
+      const cleanApiUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+      const response = await fetch(`${cleanApiUrl}/api/recommend`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -81,7 +82,8 @@ export default function RecommendationForm({
     } catch (error) {
       console.error("Failed to fetch recommendations", error);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
-      alert(`API Connection Failed!\nAttempted to connect to: ${apiUrl}/api/recommend\n\nIf the URL above says 127.0.0.1, it means you need to add NEXT_PUBLIC_API_URL to your Vercel Environment Variables and redeploy.\n\nIf the URL is correct, your Railway backend is likely crashing or taking too long to respond.`);
+      const cleanApiUrl = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
+      alert(`API Connection Failed!\nAttempted to connect to: ${cleanApiUrl}/api/recommend\n\nIf the URL above says 127.0.0.1, it means you need to add NEXT_PUBLIC_API_URL to your Vercel Environment Variables and redeploy.\n\nIf the URL is correct, your Railway backend is likely crashing or taking too long to respond.`);
       setIsFetching(false);
       setLoading(false);
     }

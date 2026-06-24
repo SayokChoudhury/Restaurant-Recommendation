@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import RecommendationForm from "@/components/RecommendationForm";
-import ResultsList from "@/components/ResultsList";
+import RecommendationForm from "../components/RecommendationForm";
+import ResultsList from "../components/ResultsList";
 
 export default function Home() {
   const [results, setResults] = useState<any[]>([]);

@@ -4,23 +4,22 @@ from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Strategy: Use the pre-built restaurants.db bundled in the repo.
-# On Railway, the repo is cloned to /app, so the DB lives at /app/data/restaurants.db.
-# SQLite needs a writable location, so we copy the bundled DB to a writable path if needed.
+# Strategy: Use the pre-built restaurants.db bundled inside backend/data/.
+# On Railway with Root Directory = backend, this becomes ./data/restaurants.db.
+# SQLite needs a writable location, so on Railway we copy to /tmp.
 
-# Determine paths
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.dirname(BACKEND_DIR)
 
-# The bundled (read-only on some platforms) seed database
-BUNDLED_DB = os.path.join(PROJECT_ROOT, "data", "restaurants.db")
+# The bundled seed database (inside the backend folder)
+BUNDLED_DB = os.path.join(BACKEND_DIR, "data", "restaurants.db")
 
 # Writable database location
-# On Railway, /tmp is always writable
 if os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("RAILWAY_SERVICE_NAME"):
+    # On Railway, the repo filesystem may be read-only; /tmp is always writable
     WRITABLE_DB_DIR = "/tmp/data"
 else:
-    WRITABLE_DB_DIR = os.path.join(PROJECT_ROOT, "data")
+    # Locally, use the same directory as the bundled DB
+    WRITABLE_DB_DIR = os.path.join(BACKEND_DIR, "data")
 
 os.makedirs(WRITABLE_DB_DIR, exist_ok=True)
 WRITABLE_DB = os.path.join(WRITABLE_DB_DIR, "restaurants.db")
@@ -29,8 +28,10 @@ WRITABLE_DB = os.path.join(WRITABLE_DB_DIR, "restaurants.db")
 if not os.path.exists(WRITABLE_DB) and os.path.exists(BUNDLED_DB):
     print(f"Copying bundled database to writable location: {WRITABLE_DB}")
     shutil.copy2(BUNDLED_DB, WRITABLE_DB)
-elif not os.path.exists(WRITABLE_DB):
-    print("WARNING: No bundled database found. Starting with empty database.")
+elif os.path.exists(WRITABLE_DB):
+    print(f"Using existing database at: {WRITABLE_DB}")
+else:
+    print(f"WARNING: No bundled database found at {BUNDLED_DB}. Starting with empty database.")
 
 DATABASE_URL = f"sqlite:///{WRITABLE_DB}"
 

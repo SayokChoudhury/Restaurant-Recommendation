@@ -9,19 +9,25 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Restaurant Recommendation API")
 
+import threading
+
 @app.on_event("startup")
-def seed_database_if_empty():
-    db = SessionLocal()
-    try:
-        if db.query(Restaurant).count() == 0:
-            print("Database is empty! Auto-seeding data from Hugging Face...")
-            run_ingestion()
-        else:
-            print(f"Database already populated with {db.query(Restaurant).count()} restaurants.")
-    except Exception as e:
-        print(f"Error checking or seeding database: {e}")
-    finally:
-        db.close()
+def startup_event():
+    def seed_database_if_empty():
+        db = SessionLocal()
+        try:
+            if db.query(Restaurant).count() == 0:
+                print("Database is empty! Auto-seeding data from Hugging Face...")
+                run_ingestion()
+            else:
+                print(f"Database already populated with {db.query(Restaurant).count()} restaurants.")
+        except Exception as e:
+            print(f"Error checking or seeding database: {e}")
+        finally:
+            db.close()
+            
+    thread = threading.Thread(target=seed_database_if_empty)
+    thread.start()
 # Setup CORS to allow Next.js frontend to communicate with this backend
 app.add_middleware(
     CORSMiddleware,

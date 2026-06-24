@@ -4,7 +4,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Set up SQLite database in the 'data' directory at the project root
-DB_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+parent_dir = os.path.dirname(os.path.dirname(__file__))
+# If running on Railway, parent_dir resolves to "/", which causes permission errors.
+if parent_dir == "/" or parent_dir == "\\":
+    DB_DIR = "/app/data"
+else:
+    DB_DIR = os.path.join(parent_dir, "data")
+    
 os.makedirs(DB_DIR, exist_ok=True)
 
 DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'restaurants.db')}"

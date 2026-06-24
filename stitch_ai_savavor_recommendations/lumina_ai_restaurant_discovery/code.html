@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina AI - Restaurant Recommendations</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error": "#ffb4ab",
+                        "tertiary-container": "#d164e2",
+                        "on-tertiary": "#570067",
+                        "on-primary-fixed-variant": "#6900b3",
+                        "on-tertiary-fixed": "#350040",
+                        "tertiary-fixed": "#ffd6ff",
+                        "primary-container": "#b76dff",
+                        "secondary": "#adc6ff",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary-fixed": "#2c0051",
+                        "on-secondary-fixed-variant": "#004395",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-background": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#7b0190",
+                        "surface-container-low": "#131b2e",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary": "#002e6a",
+                        "surface-tint": "#ddb7ff",
+                        "outline-variant": "#4d4354",
+                        "on-tertiary-container": "#4c005a",
+                        "surface-bright": "#31394d",
+                        "on-primary": "#490080",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-error": "#690005",
+                        "tertiary": "#f8acff",
+                        "on-secondary-container": "#e6ecff",
+                        "surface": "#0b1326",
+                        "surface-variant": "#2d3449",
+                        "inverse-primary": "#842bd2",
+                        "outline": "#988d9f",
+                        "inverse-on-surface": "#283044",
+                        "primary-fixed": "#f0dbff",
+                        "on-surface-variant": "#cfc2d6",
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#0b1326",
+                        "primary": "#ddb7ff",
+                        "surface-container": "#171f33",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary-container": "#0566d9",
+                        "inverse-surface": "#dae2fd",
+                        "on-surface": "#dae2fd",
+                        "primary-fixed-dim": "#ddb7ff",
+                        "on-primary-container": "#400071",
+                        "background": "#0b1326",
+                        "tertiary-fixed-dim": "#f8acff",
+                        "error-container": "#93000a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "base": "8px",
+                        "xs": "4px",
+                        "gutter": "24px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "margin-desktop": "64px",
+                        "margin-mobile": "16px",
+                        "xl": "80px",
+                        "lg": "48px"
+                    },
+                    fontFamily: {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar and minor global tweaks */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b1326; }
+        ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4d4354; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        
+        /* Loading animation */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(221,183,255,0.2); }
+            50% { opacity: 0.7; box-shadow: 0 0 30px rgba(221,183,255,0.6); }
+        }
+        .animate-ai-pulse { animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        /* Shimmer effect for skeleton */
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden relative">
+<!-- TopAppBar (Web) -->
+<header class="hidden md:flex justify-between items-center px-margin-desktop h-20 w-full fixed top-0 z-50 backdrop-blur-xl bg-surface/10 dark:bg-surface/10 shadow-[0px_10px_40px_rgba(168,85,247,0.15)] transition-all">
+<div class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">LUMINA</div>
+<div class="flex items-center gap-gutter">
+<nav class="flex gap-md">
+<a class="text-primary font-bold font-headline-md text-headline-md hover:scale-105 transition-transform duration-200" href="#">Discover</a>
+<a class="text-on-surface-variant font-headline-md text-headline-md hover:scale-105 transition-transform duration-200" href="#">Matches</a>
+<a class="text-on-surface-variant font-headline-md text-headline-md hover:scale-105 transition-transform duration-200" href="#">Saved</a>
+</nav>
+<div class="flex gap-sm">
+<button class="text-primary dark:text-primary-fixed-dim hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-size: 28px;">account_circle</span>
+</button>
+<button class="text-primary dark:text-primary-fixed-dim hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-size: 28px;">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- TopAppBar Header Fallback (Mobile) -->
+<header class="md:hidden flex justify-center items-center px-margin-mobile h-20 w-full fixed top-0 z-50 backdrop-blur-xl bg-surface/10 shadow-[0px_10px_40px_rgba(168,85,247,0.15)]">
+<div class="font-headline-lg-mobile text-headline-lg-mobile bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">LUMINA</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[100px] pb-32 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto w-full flex flex-col relative z-10">
+<!-- Hero Section -->
+<section class="text-center max-w-3xl mx-auto mt-lg mb-xl relative z-10">
+<h1 class="font-display-lg text-display-lg md:text-[64px] md:leading-[1.1] bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-secondary mb-6 tracking-tight">
+                Discover Your Next Favorite Meal
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Our AI engine curates the perfect dining spot based on your exact mood, budget, and cravings. Experience effortless culinary discovery.
+            </p>
+</section>
+<!-- Preference Form -->
+<section class="max-w-4xl mx-auto w-full relative z-10">
+<!-- Decorative Glow behind form -->
+<div class="absolute -inset-1 bg-gradient-to-r from-primary-container/20 to-secondary/20 rounded-2xl blur-2xl opacity-50"></div>
+<form class="relative bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[24px] p-6 md:p-10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]" id="ai-filter-form">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-8">
+<!-- Location -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="location">
+<span class="material-symbols-outlined text-[18px]">location_on</span> Location
+                        </label>
+<input class="bg-surface-container-highest/40 border border-outline-variant/50 rounded-xl px-4 py-3 text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors" id="location" placeholder="e.g., Bellandur, Bangalore" type="text"/>
+</div>
+<!-- Cuisine -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="cuisine">
+<span class="material-symbols-outlined text-[18px]">restaurant</span> Cuisine
+                        </label>
+<input class="bg-surface-container-highest/40 border border-outline-variant/50 rounded-xl px-4 py-3 text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors" id="cuisine" placeholder="e.g., Italian, Sushi" type="text"/>
+</div>
+<!-- Budget Radio -->
+<div class="flex flex-col gap-2 md:col-span-2 lg:col-span-1">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">payments</span> Budget
+                        </label>
+<div class="grid grid-cols-3 gap-3">
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="budget" type="radio" value="low"/>
+<div class="w-full text-center py-3 rounded-xl border border-outline-variant/50 bg-surface-container-highest/40 text-on-surface-variant peer-checked:bg-primary/20 peer-checked:border-primary peer-checked:text-primary transition-all font-label-md text-label-md">Low</div>
+</label>
+<label class="relative cursor-pointer">
+<input checked="" class="peer sr-only" name="budget" type="radio" value="medium"/>
+<div class="w-full text-center py-3 rounded-xl border border-outline-variant/50 bg-surface-container-highest/40 text-on-surface-variant peer-checked:bg-primary/20 peer-checked:border-primary peer-checked:text-primary transition-all font-label-md text-label-md">Medium</div>
+</label>
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="budget" type="radio" value="high"/>
+<div class="w-full text-center py-3 rounded-xl border border-outline-variant/50 bg-surface-container-highest/40 text-on-surface-variant peer-checked:bg-primary/20 peer-checked:border-primary peer-checked:text-primary transition-all font-label-md text-label-md">High</div>
+</label>
+</div>
+</div>
+<!-- Rating Slider -->
+<div class="flex flex-col gap-2 md:col-span-2 lg:col-span-1">
+<label class="font-label-md text-label-md text-on-surface-variant flex justify-between items-center" for="rating">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">star</span> Min Rating</span>
+<span class="text-primary font-bold" id="rating-val">4.0+</span>
+</label>
+<div class="h-[48px] flex items-center">
+<input class="w-full accent-primary h-2 bg-surface-container-highest rounded-full appearance-none outline-none cursor-pointer" id="rating" max="5" min="1" oninput="document.getElementById('rating-val').innerText = this.value + '+'" step="0.1" type="range" value="4.0"/>
+</div>
+</div>
+<!-- Fuzzy Constraints -->
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-label-md text-label-md text-on-surface-variant flex items-center gap-2" for="prompt">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span> AI Prompt (Mood &amp; Vibe)
+                        </label>
+<textarea class="bg-surface-container-highest/40 border border-outline-variant/50 rounded-xl px-4 py-3 text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors resize-none" id="prompt" placeholder="e.g., Looking for a quiet, romantic setup for an anniversary dinner with a great wine selection..." rows="3"></textarea>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-gradient-to-r from-inverse-primary to-secondary-container text-white font-headline-md text-headline-md py-4 rounded-xl shadow-[0_0_20px_rgba(132,43,210,0.4)] hover:shadow-[0_0_30px_rgba(132,43,210,0.7)] transition-all flex justify-center items-center gap-3 relative overflow-hidden group" id="submit-btn" type="submit">
+<div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
+<span id="btn-text">Get AI Recommendations</span>
+<span class="material-symbols-outlined" id="btn-icon">temp_preferences_custom</span>
+<!-- Spinner (hidden) -->
+<span class="material-symbols-outlined animate-spin hidden" id="btn-spinner">progress_activity</span>
+</button>
+</form>
+</section>
+<!-- Loading State Skeleton (Hidden initially) -->
+<section class="hidden mt-16 max-w-7xl mx-auto w-full" id="loading-state">
+<div class="text-center mb-8 animate-pulse">
+<h2 class="font-headline-lg text-headline-lg text-primary flex items-center justify-center gap-2">
+<span class="material-symbols-outlined animate-spin text-4xl">graphic_eq</span>
+                    Synthesizing Matches...
+                </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Skeleton Card 1 -->
+<div class="bg-surface-container rounded-2xl h-[400px] relative overflow-hidden border border-white/5 shadow-xl">
+<div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_1.5s_infinite]"></div>
+<div class="h-48 bg-surface-container-highest"></div>
+<div class="p-6 flex flex-col gap-4">
+<div class="h-6 w-3/4 bg-surface-container-highest rounded-md"></div>
+<div class="h-4 w-1/2 bg-surface-container-highest rounded-md"></div>
+<div class="h-20 w-full bg-primary/10 rounded-lg mt-auto border border-primary/20"></div>
+</div>
+</div>
+<!-- Skeleton Card 2 -->
+<div class="bg-surface-container rounded-2xl h-[400px] relative overflow-hidden border border-white/5 shadow-xl hidden md:block">
+<div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_1.5s_infinite]" style="animation-delay: 0.2s"></div>
+<div class="h-48 bg-surface-container-highest"></div>
+<div class="p-6 flex flex-col gap-4">
+<div class="h-6 w-2/3 bg-surface-container-highest rounded-md"></div>
+<div class="h-4 w-1/3 bg-surface-container-highest rounded-md"></div>
+<div class="h-20 w-full bg-primary/10 rounded-lg mt-auto border border-primary/20"></div>
+</div>
+</div>
+<!-- Skeleton Card 3 -->
+<div class="bg-surface-container rounded-2xl h-[400px] relative overflow-hidden border border-white/5 shadow-xl hidden lg:block">
+<div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_1.5s_infinite]" style="animation-delay: 0.4s"></div>
+<div class="h-48 bg-surface-container-highest"></div>
+<div class="p-6 flex flex-col gap-4">
+<div class="h-6 w-4/5 bg-surface-container-highest rounded-md"></div>
+<div class="h-4 w-2/5 bg-surface-container-highest rounded-md"></div>
+<div class="h-20 w-full bg-primary/10 rounded-lg mt-auto border border-primary/20"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Results Section (Hidden initially) -->
+<section class="hidden mt-16 max-w-7xl mx-auto w-full opacity-0 translate-y-8 transition-all duration-700 ease-out" id="results-section">
+<div class="flex items-end justify-between mb-8 border-b border-white/10 pb-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Curated For You</h2>
+<p class="font-body-md text-body-md text-primary mt-1">Found 2 extraordinary matches based on your mood.</p>
+</div>
+<div class="hidden md:flex gap-2">
+<button class="bg-surface-container px-4 py-2 rounded-lg border border-white/10 text-on-surface hover:bg-surface-variant transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">map</span> View Map
+                    </button>
+</div>
+</div>
+<!-- Bento Grid layout for results -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Result Card 1 -->
+<article class="group bg-surface-container/50 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 hover:border-primary/50 hover:shadow-[0_10px_40px_rgba(168,85,247,0.15)] transition-all duration-300 flex flex-col relative transform hover:-translate-y-1">
+<!-- AI Match Badge -->
+<div class="absolute top-4 left-4 z-20 bg-black/60 backdrop-blur-md border border-primary text-primary px-3 py-1.5 rounded-full font-label-md text-xs uppercase flex items-center gap-1 shadow-lg">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span> 98% Match
+                    </div>
+<!-- Image Area -->
+<div class="h-56 relative overflow-hidden w-full">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container/90 via-surface-container/20 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A striking, high-end architectural photograph of an authentic Italian pizza restaurant interior in Bellandur, Bangalore. The scene features a glowing wood-fired oven in the background. The lighting is moody and warm, using a sophisticated dark-mode aesthetic with deep obsidian shadows and luminous accents. The tables are elegantly set, evoking a premium, avant-garde culinary experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9q5jvtafPQXj0JfCef_cJ5F3WJWuSxC8JOftrWiZ82ew_1jNDUrIgfzhmYqYti2OhTUuZEYG3RfzOZuLkPDtj3IY8PbTG_uuTiPqOPCSedJuUrufOE35yzfYDyfj38h19g7A0UKo7O5B-Q6pcOclTt0i5RVtLN7BOcA9_HhOqcOf7VoO6hoZpvr2zF8lHFOVWKmEEoTC7jOqqFZasdxzIioVR8NiMToXWWjMLeRVg9I5kWrRrbL6rOvyNiC-89TE9usCPGaj4jfHG"/>
+</div>
+<!-- Content -->
+<div class="p-6 flex flex-col flex-grow z-20 -mt-12 relative">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">The Pizza Bakery</h3>
+<div class="flex items-center gap-1 bg-surface-variant px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-tertiary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface">4.4</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-4 text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span> The Bay at Ecoworld
+                        </div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md">Italian</span>
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md">Pizza</span>
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">payments</span> ₹1500</span>
+</div>
+<!-- AI Explanation Box -->
+<div class="mt-auto bg-primary/10 border-l-2 border-primary rounded-r-lg p-4 relative overflow-hidden group-hover:bg-primary/[0.15] transition-colors">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary/20 text-4xl">format_quote</span>
+<h4 class="font-label-md text-xs text-primary uppercase tracking-wider mb-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">psychology</span> AI Insight
+                            </h4>
+<p class="font-body-md text-sm text-on-surface-variant italic leading-relaxed">
+                                "Perfectly hits your 1500 budget while offering an exceptional 4.4-rated authentic Italian pizza experience right in the heart of Bellandur."
+                            </p>
+</div>
+</div>
+</article>
+<!-- Result Card 2 -->
+<article class="group bg-surface-container/50 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 hover:border-primary/50 hover:shadow-[0_10px_40px_rgba(168,85,247,0.15)] transition-all duration-300 flex flex-col relative transform hover:-translate-y-1 md:mt-8 lg:mt-0">
+<!-- AI Match Badge -->
+<div class="absolute top-4 left-4 z-20 bg-black/60 backdrop-blur-md border border-primary text-primary px-3 py-1.5 rounded-full font-label-md text-xs uppercase flex items-center gap-1 shadow-lg">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span> 95% Match
+                    </div>
+<!-- Image Area -->
+<div class="h-56 relative overflow-hidden w-full">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container/90 via-surface-container/20 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A sophisticated, high-resolution interior shot of a premium multicuisine restaurant and bar named Tango in Bellandur. The lighting features deep neon blue and purple accents against obsidian surfaces, creating a luxurious glassmorphic vibe. The space is modern, hyper-intelligent looking, and features sleek seating arrangements perfect for a curated dining experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5Z45Fcxoetl8wPjE-IcpMcRnNH59vxPWiX--UEBEQZdD32_p-RcoOZyUQOFVhCQ7_VUzzpSZYLhefyNu-5zkgs3h-PkqDO6mBYckYzxQSUf3kClUsfbNSHTUuF36gTLyJ1wayCfL0Bsf7JKyqSuLElyC_SiJTMLMD2qpFb4G_kVDPFdKPJNONU2eaDd8obamqHlydEG4hF1MCcDnqoMZxS0_sDICF-l5b-iTd-af3R7PfmRe48QcwbUl-dREkdjy5OKnur-4ucixe"/>
+</div>
+<!-- Content -->
+<div class="p-6 flex flex-col flex-grow z-20 -mt-12 relative">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">Tango Kitchen &amp; Bar</h3>
+<div class="flex items-center gap-1 bg-surface-variant px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-tertiary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface">4.7</span>
+</div>
+</div>
+<div class="flex items-center gap-2 mb-4 text-on-surface-variant font-body-md text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Bellandur Central
+                        </div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md">Multicuisine</span>
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md">Bar</span>
+<span class="bg-white/5 border border-white/10 text-on-surface-variant px-3 py-1 rounded-full text-xs font-label-md flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">payments</span> ₹1400</span>
+</div>
+<!-- AI Explanation Box -->
+<div class="mt-auto bg-primary/10 border-l-2 border-primary rounded-r-lg p-4 relative overflow-hidden group-hover:bg-primary/[0.15] transition-colors">
+<span class="material-symbols-outlined absolute top-2 right-2 text-primary/20 text-4xl">format_quote</span>
+<h4 class="font-label-md text-xs text-primary uppercase tracking-wider mb-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">psychology</span> AI Insight
+                            </h4>
+<p class="font-body-md text-sm text-on-surface-variant italic leading-relaxed">
+                                "With an outstanding 4.7 rating, this spot offers a premium multicuisine menu and great ambiance well within your specified budget."
+                            </p>
+</div>
+</div>
+</article>
+<!-- Promotional/Atmospheric Card (To break standard list and use Bento pattern) -->
+<div class="hidden lg:flex bg-gradient-to-br from-surface-container-high to-background rounded-2xl border border-white/5 p-8 flex-col justify-between relative overflow-hidden shadow-2xl">
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/20 rounded-full blur-[80px]"></div>
+<div class="absolute -left-20 -bottom-20 w-64 h-64 bg-secondary/20 rounded-full blur-[80px]"></div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-primary text-5xl mb-4">diamond</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">Lumina Premium</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Unlock exclusive chef's tables, priority bookings, and deeply personalized hyper-local culinary insights.</p>
+</div>
+<button class="relative z-10 w-full bg-white/5 backdrop-blur-md border border-white/20 text-white font-label-md py-3 rounded-lg hover:bg-white/10 transition-colors mt-8">
+                        Upgrade Experience
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden flex justify-around items-center h-16 px-4 w-full fixed bottom-0 z-50 backdrop-blur-2xl bg-surface/20 dark:bg-surface/20 border-t border-white/10 shadow-xl">
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 Active: scale-95 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-md text-[10px]">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-md text-[10px] mt-1">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+<span class="font-label-md text-[10px] mt-1">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+<!-- Interaction Script -->
+<script>
+        document.getElementById('ai-filter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const loadingState = document.getElementById('loading-state');
+            const resultsSection = document.getElementById('results-section');
+            const formSection = document.querySelector('section.max-w-4xl');
+
+            // Set loading state on button
+            btn.classList.add('animate-ai-pulse', 'pointer-events-none');
+            btnText.innerText = 'Processing...';
+            btnIcon.classList.add('hidden');
+            btnSpinner.classList.remove('hidden');
+
+            // Show skeleton loader
+            resultsSection.classList.add('hidden');
+            resultsSection.classList.remove('opacity-100', 'translate-y-0');
+            loadingState.classList.remove('hidden');
+            
+            // Scroll slightly down
+            window.scrollTo({
+                top: loadingState.offsetTop - 120,
+                behavior: 'smooth'
+            });
+
+            // Mock API delay
+            setTimeout(() => {
+                // Reset button
+                btn.classList.remove('animate-ai-pulse', 'pointer-events-none');
+                btnText.innerText = 'Refine Recommendations';
+                btnIcon.classList.remove('hidden');
+                btnIcon.innerText = 'tune'; // Change icon to suggest filtering
+                btnSpinner.classList.add('hidden');
+
+                // Hide skeleton, show results
+                loadingState.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+                
+                // Trigger animation frame for CSS transition
+                requestAnimationFrame(() => {
+                    resultsSection.classList.add('opacity-100', 'translate-y-0');
+                    resultsSection.classList.remove('opacity-0', 'translate-y-8');
+                });
+
+            }, 2000);
+        });
+    </script>
+</body></html>

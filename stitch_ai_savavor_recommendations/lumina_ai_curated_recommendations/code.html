@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina AI - Restaurant Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#988d9f",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container": "#171f33",
+                        "primary": "#ddb7ff",
+                        "background": "#0b1326",
+                        "surface-tint": "#ddb7ff",
+                        "tertiary-fixed-dim": "#f8acff",
+                        "on-tertiary-fixed": "#350040",
+                        "surface-dim": "#0b1326",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#dae2fd",
+                        "tertiary-fixed": "#ffd6ff",
+                        "surface-container-highest": "#2d3449",
+                        "primary-fixed": "#f0dbff",
+                        "on-primary": "#490080",
+                        "primary-container": "#b76dff",
+                        "on-primary-fixed": "#2c0051",
+                        "on-surface-variant": "#cfc2d6",
+                        "tertiary-container": "#d164e2",
+                        "tertiary": "#f8acff",
+                        "surface": "#0b1326",
+                        "primary-fixed-dim": "#ddb7ff",
+                        "on-tertiary-container": "#4c005a",
+                        "inverse-primary": "#842bd2",
+                        "error": "#ffb4ab",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-primary-fixed-variant": "#6900b3",
+                        "on-error": "#690005",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container-high": "#222a3d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#2d3449",
+                        "secondary-container": "#0566d9",
+                        "outline-variant": "#4d4354",
+                        "on-primary-container": "#400071",
+                        "on-secondary-container": "#e6ecff",
+                        "surface-bright": "#31394d",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary": "#570067",
+                        "surface-container-low": "#131b2e",
+                        "on-tertiary-fixed-variant": "#7b0190",
+                        "on-surface": "#dae2fd",
+                        "on-secondary": "#002e6a",
+                        "secondary": "#adc6ff",
+                        "on-secondary-fixed": "#001a42",
+                        "secondary-fixed-dim": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "80px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-card:hover {
+            border-color: rgba(221, 183, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(168, 85, 247, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #ddb7ff, #adc6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+        .bg-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- Ambient Background Glows -->
+<div class="bg-glow w-[500px] h-[500px] bg-primary top-0 left-[-100px]"></div>
+<div class="bg-glow w-[600px] h-[600px] bg-secondary bottom-[20%] right-[-200px]"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl bg-surface/10 dark:bg-surface/10 border-b border-white/10 shadow-[0px_10px_40px_rgba(168,85,247,0.15)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20">
+<div class="font-display-lg text-display-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            LUMINA
+        </div>
+<div class="flex gap-4">
+<button class="text-primary dark:text-primary-fixed-dim hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+<button class="text-primary dark:text-primary-fixed-dim hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</div>
+</header>
+<main class="pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-[1440px] mx-auto">
+<!-- Hero Section -->
+<div class="mb-lg text-center md:text-left">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-sm">
+                AI Matches for <span class="gradient-text">Your Evening</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+                We've curated the perfect dining options based on your preferences, budget, and location.
+            </p>
+</div>
+<!-- Filter/Refine Bar -->
+<div class="flex flex-wrap gap-3 mb-10">
+<button class="glass-card px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[18px]">tune</span> Refine
+            </button>
+<div class="glass-card px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 bg-primary/10 border-primary/30">
+<span>Budget: ₹1500</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-primary">close</span>
+</div>
+<div class="glass-card px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 bg-primary/10 border-primary/30">
+<span>Bellandur</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-primary">close</span>
+</div>
+</div>
+<!-- Results Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md md:gap-lg">
+<!-- Card 1 -->
+<article class="glass-card rounded-[24px] overflow-hidden flex flex-col hover:scale-[1.02] transition-all duration-300 group cursor-pointer relative">
+<!-- AI Badge -->
+<div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md border border-primary/40 rounded-full px-3 py-1 flex items-center gap-1.5 shadow-[0_0_15px_rgba(221,183,255,0.3)]">
+<span class="material-symbols-outlined text-primary text-[16px]">auto_awesome</span>
+<span class="font-label-md text-label-md text-primary">98% Match</span>
+</div>
+<div class="h-64 w-full relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A high-end, cinematic photograph of an authentic Italian pizza with a perfectly blistered crust, fresh basil, and melting mozzarella, sitting on a rustic wooden table in a warmly lit, sophisticated modern pizzeria. The lighting is dramatic, emphasizing the textures of the food, set within a sophisticated dark mode aesthetic with deep shadows and subtle warm highlights. 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACcBENJQK9xRBIqu5ccgTxBbYR8BEBkqrUsI1GiWlJQe9iBl6WpnkaV6StgymGuOxGdDZCEJgnCpSHRi5WJsloB78MJ6Y5JY3YJO4pG3dlIRWIhAGQ41NgnLeK4uxs6r7FQN7Zg77hXWs0tD368oQNmdw95HG98ipOSNlFSFsc4I-oTbHed890PmqFJpIsJzZARbvjWE0zR1WGt6rIohW6YeAuwKoHqZpwNhlo-tK4GZbA3sjbxyXB3bhB6C9zOQNCec5_lsZ1sAQa"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/50 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<h2 class="font-headline-md text-headline-md text-white mb-1">The Pizza Bakery</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Italian, Pizza • Bellandur</p>
+</div>
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center gap-4 mb-6 pb-6 border-b border-white/5">
+<div class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-bold text-white">4.4</span>
+</div>
+<div class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                            ₹1500 for two
+                        </div>
+<div class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant ml-auto">
+<span class="material-symbols-outlined text-[18px]">directions_walk</span>
+                            1.2 km
+                        </div>
+</div>
+<!-- AI Explanation Section -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 relative overflow-hidden mt-auto">
+<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">smart_toy</span>
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-1 uppercase tracking-wider text-[11px]">Why we chose this</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm italic">
+                                    "Perfectly hits your 1500 budget while offering an exceptional 4.4-rated authentic Italian pizza experience right in the heart of Bellandur."
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="glass-card rounded-[24px] overflow-hidden flex flex-col hover:scale-[1.02] transition-all duration-300 group cursor-pointer relative">
+<!-- AI Badge -->
+<div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md border border-primary/40 rounded-full px-3 py-1 flex items-center gap-1.5 shadow-[0_0_15px_rgba(221,183,255,0.3)]">
+<span class="material-symbols-outlined text-primary text-[16px]">auto_awesome</span>
+<span class="font-label-md text-label-md text-primary">95% Match</span>
+</div>
+<div class="h-64 w-full relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A stunning wide shot of a modern, upscale multi-cuisine restaurant interior at night. The ambiance is moody and chic, featuring sleek dark wood furnishings, subtle neon blue and purple accent lighting, and a bustling but refined atmosphere. The image perfectly captures the sophisticated dark mode aesthetic with deep obsidian tones and glowing highlights. Professional architectural photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQs6zF6RC9FQdkHdV9XMXNnjDDHnXLUuWfz1prbjuWOWktswyC61IJG4EL9wOnUYwpBErwNb5b5ci3n_2_LM2gQoCchejeFw2BBF1J9EhjkE2FCHjuQy3rmADE8wpXirLZnQXLa1RJThyPX9CJ58CcnbdqpQecrYsJT84GFUtNXVzBRMOqnoghcztUcZZfGmBw6Bg_ex9Ju4ktjLaKZ1uoDmHZhziJFfzTCyHc_b6Egw8eg6s42-qH62h0cydE-T9PaxMW1azQhjVg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/50 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<h2 class="font-headline-md text-headline-md text-white mb-1">Tango Kitchen &amp; Bar</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Multicuisine • Bellandur</p>
+</div>
+<button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</button>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-grow">
+<div class="flex items-center gap-4 mb-6 pb-6 border-b border-white/5">
+<div class="flex items-center gap-1 bg-surface-container px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-secondary text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-bold text-white">4.7</span>
+</div>
+<div class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                            ₹1400 for two
+                        </div>
+<div class="flex items-center gap-1 font-body-md text-body-md text-on-surface-variant ml-auto">
+<span class="material-symbols-outlined text-[18px]">directions_walk</span>
+                            2.5 km
+                        </div>
+</div>
+<!-- AI Explanation Section -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-4 relative overflow-hidden mt-auto">
+<div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-secondary"></div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">smart_toy</span>
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-1 uppercase tracking-wider text-[11px]">Why we chose this</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm italic">
+                                    "With an outstanding 4.7 rating, this spot offers a premium multicuisine menu and great ambiance well within your specified budget."
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 backdrop-blur-2xl bg-surface/20 dark:bg-surface/20 border-t border-white/10 shadow-xl flex justify-around items-center h-16 px-4 pb-safe">
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 scale-95 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span class="font-label-md text-[10px] font-semibold">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">auto_awesome</span>
+<span class="font-label-md text-[10px] font-semibold">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">bookmark</span>
+<span class="font-label-md text-[10px] font-semibold">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-[10px] font-semibold">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple script to handle bottom nav active state visually if needed, 
+        // though server-side rendering usually handles this.
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.className = "flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors";
+                });
+                this.className = "flex flex-col items-center justify-center text-primary bg-primary/10 rounded-xl px-4 py-1 scale-95 transition-all duration-150";
+            });
+        });
+    </script>
+</body></html>

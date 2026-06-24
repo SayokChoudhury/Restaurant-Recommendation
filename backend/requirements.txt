@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlalchemy
+pandas
+datasets
+huggingface_hub
+groq
+python-dotenv
